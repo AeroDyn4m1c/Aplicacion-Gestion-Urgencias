@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -31,7 +32,7 @@ public class Main {
                     enseñarPacientes();
                     break;
                 case 3:
-                    // eliminarPaciente();
+                    eliminarPaciente();
                     break;
                 case 4:
                     // modificarPaciente();
@@ -40,6 +41,7 @@ public class Main {
                     // ordenarPacientes();
                     break;
                 case 6:
+                    System.out.println("Saliendo del programa...");
                     return;
             }
         }
@@ -114,7 +116,32 @@ public class Main {
         }
     }
 
+    static void eliminarPaciente() {
+        if (numPacientes == 0) {
+            System.out.println("Error: No hay pacientes registrados.");
+            return;
+        }
 
+        enseñarPacientes();
+
+        int nuss = checkEntero("Indique el NUSS del paciente que quiere eliminar:", 100000, 999999);
+
+        for (int i = 0; i < numPacientes; i++) {
+            if (pacientes[i][0] == nuss) {
+                for (int j = i; j < numPacientes - 1; j++) {
+                    pacientes[j][0] = pacientes[j + 1][0];
+                    pacientes[j][1] = pacientes[j + 1][1];
+                    pacientes[j][2] = pacientes[j + 1][2];
+                    pacientes[j][3] = pacientes[j + 1][3];
+                    pacientes[j][4] = pacientes[j + 1][4];
+                }
+                numPacientes--;
+                System.out.println("Paciente eliminado correctamente.");
+                return;
+            }
+            System.out.println("Error: No se ha encontrado un paciente con el NUSS indicado.");
+        }
+    }
 
 
 
