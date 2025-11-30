@@ -35,7 +35,7 @@ public class Main {
                     eliminarPaciente();
                     break;
                 case 4:
-                    // modificarPaciente();
+                    modificarPaciente();
                     break;
                 case 5:
                     // ordenarPacientes();
@@ -141,6 +141,62 @@ public class Main {
             }
             System.out.println("Error: No se ha encontrado un paciente con el NUSS indicado.");
         }
+    }
+
+    static void modificarPaciente() {
+        if (numPacientes == 0) {
+            System.out.println("No hay pacientes registrados.");
+            return;
+        }
+
+        enseñarPacientes();
+
+        int nuss = checkEntero("Ingrese el NUSS del paciente a modificar: ", 100000, 999999);
+
+        int index = -1;
+        for (int i = 0; i < numPacientes; i++) {
+            if (pacientes[i][0] == nuss) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            System.out.println("Error: No se encontró un paciente con ese NUSS.");
+            return;
+        }
+
+        System.out.println("""
+                ¿Que desea modificar?:
+                    Síntoma y exploración (1)
+                    Nivel de prioridad (2)
+                    Temperatura actual (3)""");
+        int opcion = checkEntero("", 1, 3);
+
+        switch (opcion) {
+            case 1:
+                System.out.println("""
+                        ¿Síntoma?:
+                            Dolor (0)
+                            Lesión traumática (1)
+                            Fiebre alta (2)
+                            Confusión o desorientación (3)""");
+                int sintoma = checkEntero("", 0, 3);
+                int exploracion = exploracionSintoma(sintoma);
+                pacientes[index][1] = sintoma;
+                pacientes[index][2] = exploracion;
+                break;
+            case 2:
+                int nivelPrioridad = checkEntero("Nuevo nivel de prioridad: ", 0, 5);
+                pacientes[index][3] = nivelPrioridad;
+                break;
+            case 3:
+                int temperatura = checkEntero("Nueva temperatura: ", 27, 45);
+                pacientes[index][4] = temperatura;
+                break;
+        }
+
+        System.out.println("Paciente modificado correctamente.");
     }
 
 
