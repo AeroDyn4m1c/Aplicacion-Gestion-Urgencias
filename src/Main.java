@@ -4,11 +4,15 @@ import java.util.Scanner;
 public class Main {
     public static Scanner scanner = new Scanner(System.in);
 
+    // Array bidimensional para almacenar pacientes
+    // Filas representan un paciente, columnas representan NUSS, sintoma, exploracion, nivel prioridad, temperatura
+    // Como hay que predefinir el array, se admiten maximo de 50 pacientes
     public static int[][] pacientes = new int[50][5];
+    // Contador de pacientes registrados
     public static int numPacientes = 0;
 
     public static void main(String[] args) {
-        System.out.println("Bienvenido al programa del sistema sanitario de Castellon.");
+        System.out.println("Bienvenido al programa del sistema sanitario de Castellón.");
         ejecutarPrograma();
     }
 
@@ -38,7 +42,7 @@ public class Main {
                     modificarPaciente();
                     break;
                 case 5:
-                    // ordenarPacientes();
+                    ordenarPacientes();
                     break;
                 case 6:
                     System.out.println("Saliendo del programa...");
@@ -47,6 +51,7 @@ public class Main {
         }
     }
 
+    // Método para añadir pacientes al array pacientes[][]
     static void añadirPaciente() {
         System.out.println("\nLos datos requeridos para añadir un nuevo paciente son:");
         System.out.println("""
@@ -63,6 +68,7 @@ public class Main {
 
         int nuss = checkEntero("NUSS?: ", 100000, 999999);
 
+        // Verifica si NUSS ya existe
         for (int i = 0; i < numPacientes; i++) {
             if (pacientes[i][0] == nuss) {
                 System.out.println("Error: Ya existe un paciente con este NUSS.");
@@ -84,17 +90,20 @@ public class Main {
 
         int temperaturaActual = checkEntero("¿Temperatura actual?: ", 27, 45);
 
+        // Añadir datos al array pacientes[][]
         pacientes[numPacientes][0] = nuss;
         pacientes[numPacientes][1] = sintoma;
         pacientes[numPacientes][2] = exploracion;
         pacientes[numPacientes][3] = nivelPrioridad;
         pacientes[numPacientes][4] = temperaturaActual;
 
+        // Incrementar número de pacientes mas 1
         numPacientes++;
 
         System.out.println("Paciente añadido correctamente.");
     }
 
+    // Método para enseñar pacientes registrados en pacientes[][]
     static void enseñarPacientes() {
         if (numPacientes == 0) {
             System.out.println("Error: No hay pacientes registrados.");
@@ -103,6 +112,7 @@ public class Main {
 
         System.out.println("Enseñando pacientes...");
 
+        // Formato para enseñar de manera clara los datos
         System.out.printf("%-12s %-30s %-40s %-25s %-15s%n",
                 "NUSS", "Síntoma", "Exploración", "Nivel de prioridad", "Temperatura actual");
 
@@ -116,6 +126,7 @@ public class Main {
         }
     }
 
+    // Método para eliminar un paciente basándose en el NUSS del array pacientes[][]
     static void eliminarPaciente() {
         if (numPacientes == 0) {
             System.out.println("Error: No hay pacientes registrados.");
@@ -128,6 +139,7 @@ public class Main {
 
         for (int i = 0; i < numPacientes; i++) {
             if (pacientes[i][0] == nuss) {
+                // Desplaza todos los pacientes siguientes una posición hacia atrás
                 for (int j = i; j < numPacientes - 1; j++) {
                     pacientes[j][0] = pacientes[j + 1][0];
                     pacientes[j][1] = pacientes[j + 1][1];
@@ -135,14 +147,18 @@ public class Main {
                     pacientes[j][3] = pacientes[j + 1][3];
                     pacientes[j][4] = pacientes[j + 1][4];
                 }
+
+                // Se resta 1 la cantidad de pacientes registrados
                 numPacientes--;
                 System.out.println("Paciente eliminado correctamente.");
                 return;
             }
+
             System.out.println("Error: No se ha encontrado un paciente con el NUSS indicado.");
         }
     }
 
+    // Método para modificar dato deseado de un paciente
     static void modificarPaciente() {
         if (numPacientes == 0) {
             System.out.println("No hay pacientes registrados.");
@@ -153,6 +169,7 @@ public class Main {
 
         int nuss = checkEntero("Ingrese el NUSS del paciente a modificar: ", 100000, 999999);
 
+        // Comprueba si el paciente está registrado en el array pacientes[][]
         int index = -1;
         for (int i = 0; i < numPacientes; i++) {
             if (pacientes[i][0] == nuss) {
@@ -199,12 +216,37 @@ public class Main {
         System.out.println("Paciente modificado correctamente.");
     }
 
+    // Método para ordenar pacientes basándose en el nivel de prioridad
+    static void ordenarPacientes() {
+        if (numPacientes == 0) {
+            System.out.println("No hay pacientes registrados.");
+            return;
+        }
 
+        System.out.println("Ordenando por prioridad...");
 
+        // Algoritmo bubble sort
+        for (int i = 0; i < numPacientes - 1; i++) {
+            for (int j = 0; j < numPacientes - i - 1; j++) {
+                if (pacientes[j][3] < pacientes[j + 1][3]) {
+                    // Intercambia toda la fila del paciente
+                    for (int k = 0; k < 5; k++) {
+                        int aux = pacientes[j][k];
+                        pacientes[j][k] = pacientes[j + 1][k];
+                        pacientes[j + 1][k] = aux;
+                    }
+                }
+            }
+        }
 
+        System.out.println("Pacientes ordenados por prioridad (mayor a menor).");
 
+        enseñarPacientes();
+    }
 
-    // Metodos auxiliares
+    // Métodos auxiliares
+
+    // Método auxiliar para comprobar si el valor insertado es entero, no string y si se localiza entre min y max
     static int checkEntero(String string, int min, int max) {
         boolean valido = false;
         int valor = 0;
@@ -231,6 +273,7 @@ public class Main {
         return valor;
     }
 
+    // Método auxiliar para enseñar exploraciones según el sintoma seleccionado
     static int exploracionSintoma(int sintoma) {
         int exploracion;
 
@@ -276,6 +319,7 @@ public class Main {
         return exploracion;
     }
 
+    // Método auxiliar para obtener el nombre del sintoma para enseñarlo por pantalla
     static String nombreSintoma(int sintoma) {
         switch (sintoma) {
             case 0:
@@ -290,6 +334,7 @@ public class Main {
         return "";
     }
 
+    // Método auxiliar para obtener el nombre de la exploracion para enseñarlo por pantalla
     static String nombreExploracion(int sintoma, int exploracion) {
         switch (sintoma) {
             case 0:
